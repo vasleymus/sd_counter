@@ -1,28 +1,20 @@
-import { useState, Fragment, useRef } from "react";
+import { useState, Fragment } from "react";
 import Counter from "./Counter";
 import "./App.css";
 
-type Counters = {
-  id: number;
-  element: JSX.Element;
-}[];
+type Counters = JSX.Element[];
 
 function App() {
-  const [counters, setCounters] = useState<Counters>([
-    { id: 1, element: <Counter /> },
-  ]);
-  const nextId = useRef(1); // store counter id
+  const [counters, setCounters] = useState<Counters>([<Counter />]);
 
   const handleAddCounter = () => {
-    const id = ++nextId.current; // increment id
-    const newCounter = { id, element: <Counter /> };
-    setCounters((c) => [...c, newCounter]);
+    setCounters((c) => [...c, <Counter />]);
   };
 
   return (
     <>
-      {counters.map((counter) => {
-        return <Fragment key={counter.id}>{counter.element}</Fragment>;
+      {counters.map((counter, i) => {
+        return <Fragment key={i}>{counter}</Fragment>;
       })}
       <button onClick={handleAddCounter}>Add Counter</button>
     </>
