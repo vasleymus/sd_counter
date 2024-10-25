@@ -1,4 +1,12 @@
-import { beforeAll, afterAll, beforeEach, describe, it, expect } from "vitest";
+import {
+  beforeAll,
+  afterAll,
+  beforeEach,
+  describe,
+  it,
+  expect,
+  vi,
+} from "vitest";
 import { render, screen, cleanup, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import userEvent from "@testing-library/user-event";
@@ -6,7 +14,7 @@ import App from "../src/App";
 import { server } from "./mocks/node";
 import { INITIAL_COUNT } from "./mocks/handlers";
 
-describe("Stage B", () => {
+describe("Stage C", () => {
   beforeAll(() => server.listen());
   afterAll(() => server.close());
 
@@ -35,6 +43,13 @@ describe("Stage B", () => {
   it("should render Decrement button", async () => {
     await waitFor(() => {
       const button = screen.getByRole("button", { name: "Decrement" });
+      expect(button).toBeInTheDocument();
+    });
+  });
+
+  it("should render Randomize button", async () => {
+    await waitFor(() => {
+      const button = screen.getByRole("button", { name: "Randomize" });
       expect(button).toBeInTheDocument();
     });
   });
@@ -126,5 +141,27 @@ describe("Stage B", () => {
       const heading = screen.getByRole("heading");
       expect(heading).toHaveTextContent(`The count is: ${result}`);
     });
+  });
+
+  it("should check for randomness", async () => {
+    // spy on Math.random to always return 0.5
+    const mockRandom = vi.spyOn(Math, "random").mockReturnValue(0.5);
+    // sign will always be -1
+    const sign = Math.random() > 0.5 ? 1 : -1;
+    // create random value via the same formula but with mocked random
+    const randomValue = Math.floor(Math.random() * 100) * sign;
+
+    await waitFor(async () => {
+      const button = screen.getByRole("button", { name: "Randomize" });
+      expect(button).toBeInTheDocument();
+
+      const user = userEvent.setup();
+      await user.click(button);
+
+      const heading = screen.getByRole("heading");
+      expect(heading).toHaveTextContent(`The count is: ${randomValue}`);
+    });
+
+    mockRandom.mockRestore();
   });
 });
