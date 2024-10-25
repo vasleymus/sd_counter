@@ -190,4 +190,27 @@ describe("Stage D", () => {
       expect(heading.textContent).toBe(`The count is: ${INITIAL_COUNT}`);
     });
   });
+
+  // not 100% stable test
+  it("should check detached state of multiple counters", async () => {
+    const button = screen.getByRole("button", { name: "Add Counter" });
+    expect(button).toBeInTheDocument();
+
+    const user = userEvent.setup();
+    await user.click(button);
+
+    const headings = screen.getAllByRole("heading");
+    expect(headings.length).toBe(2);
+
+    headings.forEach((heading) => {
+      expect(heading.textContent).toBe(`The count is: ${INITIAL_COUNT}`);
+    });
+
+    const randomButtons = screen.getAllByRole("button", { name: "Randomize" });
+    await user.click(randomButtons[0]);
+    await user.click(randomButtons[1]);
+
+    // expect that two counters have different values
+    expect(headings[0].textContent).not.toBe(headings[1].textContent);
+  });
 });
