@@ -13,6 +13,9 @@ import userEvent from "@testing-library/user-event";
 import App from "../src/App";
 import { server } from "./mocks/node";
 import { INITIAL_COUNT } from "./mocks/handlers";
+import { useAppStore } from "./store/store";
+
+const initialAppState = useAppStore.getState();
 
 describe("Stage D", () => {
   beforeAll(() => server.listen());
@@ -22,6 +25,7 @@ describe("Stage D", () => {
   beforeEach(() => {
     server.resetHandlers();
     cleanup();
+    useAppStore.setState(initialAppState, true);
     render(<App />);
   });
 
