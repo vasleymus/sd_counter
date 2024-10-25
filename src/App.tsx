@@ -1,17 +1,26 @@
-import { Fragment } from "react";
+import { useEffect } from "react";
 import Counter from "./Counter";
 import { useAppStore } from "./store/store";
+import { initializationState } from "./store/store";
 import "./App.css";
 
 function App() {
   const { counters, addCounter } = useAppStore();
 
+  // Add first counter on application start
+  useEffect(() => {
+    if (!initializationState.initialized) {
+      initializationState.initialized = true;
+      addCounter();
+    }
+  }, [addCounter]);
+
   return (
     <>
-      {counters.map((counter, i) => {
-        return <Fragment key={i}>{counter}</Fragment>;
-      })}
-      <button onClick={() => addCounter(<Counter />)}>Add Counter</button>
+      {counters.map((counter) => (
+        <Counter key={counter.id} id={counter.id} />
+      ))}
+      <button onClick={addCounter}>Add Counter</button>
     </>
   );
 }

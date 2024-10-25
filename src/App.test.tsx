@@ -14,6 +14,7 @@ import App from "../src/App";
 import { server } from "./mocks/node";
 import { INITIAL_COUNT } from "./mocks/handlers";
 import { useAppStore } from "./store/store";
+import { initializationState } from "./store/store";
 
 const initialAppState = useAppStore.getState();
 
@@ -26,6 +27,7 @@ describe("Stage D", () => {
     server.resetHandlers();
     cleanup();
     useAppStore.setState(initialAppState, true);
+    initializationState.initialized = false;
     render(<App />);
   });
 
