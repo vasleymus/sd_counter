@@ -6,6 +6,7 @@ This project is a test assignment for SleepDoctor, scaffolded using the `create 
 
 - **Main Application Logic**: Located in `src/App.tsx`
 - **Test Cases**: Found in `src/App.test.tsx`
+- **Global Store**: Found in `store/store.ts`
 
 ## Getting Started
 
