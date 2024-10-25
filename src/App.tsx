@@ -41,6 +41,12 @@ function Counter() {
     setState((s) => ({ ...s, count: s.count! - 1 }));
   };
 
+  const handleRandomize = () => {
+    const sign = Math.random() > 0.5 ? 1 : -1;
+    const random = Math.floor(Math.random() * 100) * sign;
+    setState((s) => ({ ...s, count: random }));
+  };
+
   if (state.loading) return <h1>Loading...</h1>;
   if (state.error) return <h1>Error: {state.error}</h1>;
 
@@ -49,6 +55,7 @@ function Counter() {
       <h1>The count is: {state.count}</h1>
       <button onClick={handleIncrement}>Increment</button>
       <button onClick={handleDecrement}>Decrement</button>
+      <button onClick={handleRandomize}>Randomize</button>
     </div>
   );
 }
