@@ -14,7 +14,7 @@ import App from "../src/App";
 import { server } from "./mocks/node";
 import { INITIAL_COUNT } from "./mocks/handlers";
 
-describe("Stage C", () => {
+describe("Stage D", () => {
   beforeAll(() => server.listen());
   afterAll(() => server.close());
 
@@ -29,7 +29,7 @@ describe("Stage C", () => {
     await waitFor(() => {
       const heading = screen.getByRole("heading");
       expect(heading).toBeInTheDocument();
-      expect(heading).toHaveTextContent(`The count is: ${INITIAL_COUNT}`);
+      expect(heading.textContent).toBe(`The count is: ${INITIAL_COUNT}`);
     });
   });
 
@@ -50,6 +50,13 @@ describe("Stage C", () => {
   it("should render Randomize button", async () => {
     await waitFor(() => {
       const button = screen.getByRole("button", { name: "Randomize" });
+      expect(button).toBeInTheDocument();
+    });
+  });
+
+  it("should render Add Counter button", async () => {
+    await waitFor(() => {
+      const button = screen.getByRole("button", { name: "Add Counter" });
       expect(button).toBeInTheDocument();
     });
   });
@@ -96,7 +103,7 @@ describe("Stage C", () => {
       await user.click(decrementButton);
 
       const heading = screen.getByRole("heading");
-      expect(heading).toHaveTextContent(`The count is: ${result}`);
+      expect(heading.textContent).toBe(`The count is: ${result}`);
     });
   });
 
@@ -112,7 +119,7 @@ describe("Stage C", () => {
       await user.dblClick(decrementButton);
 
       const heading = screen.getByRole("heading");
-      expect(heading).toHaveTextContent(`The count is: ${result}`);
+      expect(heading.textContent).toBe(`The count is: ${result}`);
     });
   });
 
@@ -139,7 +146,7 @@ describe("Stage C", () => {
       await user.dblClick(decrementButton); // -2
 
       const heading = screen.getByRole("heading");
-      expect(heading).toHaveTextContent(`The count is: ${result}`);
+      expect(heading.textContent).toBe(`The count is: ${result}`);
     });
   });
 
@@ -159,9 +166,28 @@ describe("Stage C", () => {
       await user.click(button);
 
       const heading = screen.getByRole("heading");
-      expect(heading).toHaveTextContent(`The count is: ${randomValue}`);
+      expect(heading.textContent).toBe(`The count is: ${randomValue}`);
     });
 
     mockRandom.mockRestore();
+  });
+
+  it("should add more counters to the page", async () => {
+    const button = screen.getByRole("button", { name: "Add Counter" });
+    expect(button).toBeInTheDocument();
+
+    const user = userEvent.setup();
+    // add two more counters
+    await user.click(button);
+    await user.click(button);
+
+    // expect that page has 3 headings
+    const headings = screen.getAllByRole("heading");
+    expect(headings.length).toBe(3);
+
+    // check that every heading have initial count
+    headings.forEach((heading) => {
+      expect(heading.textContent).toBe(`The count is: ${INITIAL_COUNT}`);
+    });
   });
 });
