@@ -1,22 +1,17 @@
-import { useState, Fragment } from "react";
+import { Fragment } from "react";
 import Counter from "./Counter";
+import { useAppStore } from "./store/store";
 import "./App.css";
 
-type Counters = JSX.Element[];
-
 function App() {
-  const [counters, setCounters] = useState<Counters>([<Counter />]);
-
-  const handleAddCounter = () => {
-    setCounters((c) => [...c, <Counter />]);
-  };
+  const { counters, addCounter } = useAppStore();
 
   return (
     <>
       {counters.map((counter, i) => {
         return <Fragment key={i}>{counter}</Fragment>;
       })}
-      <button onClick={handleAddCounter}>Add Counter</button>
+      <button onClick={() => addCounter(<Counter />)}>Add Counter</button>
     </>
   );
 }
